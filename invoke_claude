@@ -1,0 +1,60 @@
+import boto3
+import json
+import requests
+import os
+
+# Initialize AWS Bedrock client
+client = boto3.client("bedrock-runtime", region_name="us-east-1")  # Change if needed
+
+# Function to fetch the 10-Q content from EDGAR API
+EDGAR_API_URL = os.environ.get("EDGAR_API_URL")  # Ensure this is set in your environment variables
+
+def get_10q_content(cik, year, quarter):
+    """Fetches the 10-Q content using the EDGAR API Lambda."""
+    response = requests.get(f"{EDGAR_API_URL}?cik={cik}&year={year}&quarter={quarter}")
+    if response.status_code == 200:
+        return response.text
+    else:
+        return "Could not retrieve 10-Q content."
+
+def invoke_claude(prompt, context):
+    """Invoke Claude model on AWS Bedrock with contextual information."""
+    full_prompt = (
+        "Use the following information to answer the question accurately. "
+        "If the information does not contain the answer, say so.\n\n"
+        f"Context:\n{context}\n\n"
+        f"Question: {prompt}\n\n"
+    )
+    
+    payload = {
+        "prompt": full_prompt,
+        "max_tokens_to_sample": 500,
+        "temperature": 0.7,
+        "top_k": 50,
+        "top_p": 0.9,
+    }
+    
+    response = client.invoke_model(
+        modelId="anthropic.claude-3-sonnet-2024-02-29",  # Ensure correct model ID
+        body=json.dumps(payload),
+        contentType="application/json",
+        accept="application/json",
+    )
+    
+    response_body = json.loads(response["body"].read().decode("utf-8"))
+    return response_body.get("completion", "No response from model")
+
+# Example Usage
+if __name__ == "__main__":
+    cik = "0000320193"  # Example CIK for Apple Inc.
+    year = 2023
+    quarter = 2
+    
+    # Get the 10-Q document content
+    ten_q_content = get_10q_content(cik, year, quarter)
+    
+    # Ask a question using the 10-Q as context
+    question = "What were the main revenue sources for the company in this quarter?"
+    response = invoke_claude(question, ten_q_content)
+    
+    print("Claude's Response:", response)
