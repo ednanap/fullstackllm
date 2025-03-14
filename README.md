@@ -35,15 +35,15 @@ This project leverages **AWS Bedrock** and **SEC EDGAR API** to fetch **10-Q fin
 ## Future Front-End Design & Implementation
 
 ### Technology Stack
-- **React.js = for a **fast, interactive UI**.
+- **React.js** = for a **fast, interactive UI**.
 - **AWS API Gateway** to route frontend queries to backend Lambda functions.
 - **TailwindCSS** for modern, responsive styling.
 
 
 ### Planned Features
-- ✅ **Company Search Bar** – Allows users to search for companies by name or ticker.
-- ✅ **Financial Report Display** – Shows SEC filings in a readable format.
-- ✅ **AI-Powered Q&A** – Users can ask **natural language questions** about financial data.
+-  **Company Search Bar** – Allows users to search for companies by name or ticker.
+-  **Financial Report Display** – Shows SEC filings in a readable format.
+-  **AI-Powered Q&A** – Users can ask **natural language questions** about financial data.
 
 
 ---
@@ -87,7 +87,5 @@ npm run dev
 - **Complete front-end development** with a modern UI.
 - **Deploy API Gateway** to connect the frontend to AWS Lambda.
 - **Improve AI responses** by fine-tuning prompt engineering.
-- **Add authentication** to track user queries.
 
-🚀 Stay tuned for updates as we build an intuitive **financial insights platform!**
 
